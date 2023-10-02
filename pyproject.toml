@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "code"
+version = "0.1.0"
+description = ""
+authors = ["Timothy Borrell <Timothy.Borrell@codecentric.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.10, <4.0"
+numpy = "1.24"
+torch = ">=2.0.0, !=2.0.1"
+matplotlib = "^3.7.1"
+torch-geometric = "^2.3.1"
+torchvision = "^0.15.1"
+pandas = "^2.0.3"
+scikit-learn = "^1.2.2"
+pybind11 = "^2.10.4"
+eigen = "^0.0.1"
+cmeel-boost = "^1.82.0"
+eigenpy = "3.0.0"
+black = "^23.7.0"
+ipykernel = "^6.25.1"
+setuptools = "^68.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
