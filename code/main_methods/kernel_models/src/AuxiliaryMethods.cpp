@@ -29,7 +29,7 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = "code/main_methods";
+        string path = ".";
 
         vector<uint> graph_indicator;
         ifstream myfile(
@@ -171,7 +171,7 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = "code/main_methods";
+        string path = ".";
         vector<int> classes;
 
         ifstream myfile(

@@ -8,12 +8,12 @@ from auxiliarymethods.kernel_evaluation import linear_svm_evaluation
 
 def main():
     dataset = [
-        # ["ENZYMES", True],
-        # ["IMDB-BINARY", False],
-        # ["IMDB-MULTI", False],
-        # ["PROTEINS", True],
-        # ["REDDIT-BINARY", False],
-        # ["PTC_FM", False]
+        ["ENZYMES", True],
+        ["IMDB-BINARY", False],
+        ["IMDB-MULTI", False],
+        ["PROTEINS", True],
+        ["REDDIT-BINARY", False],
+        ["PTC_FM", False],
     ]
 
     # Number of repetitions of 10-CV.

@@ -91,12 +91,19 @@ class Dataset_data(InMemoryDataset):
             x_new = torch.zeros(data.x.size(0), max_label + 1)
             x_new[range(x_new.shape[0]), data.x.view(1, data.x.size(0))] = 1
             data.x = x_new
-            # if targets[i] < 0:
-            data.y = (
-                torch.from_numpy(np.array([targets[i]])).to(torch.float) - min_targets
-            )
-            # else:
-            #     data.y = torch.from_numpy(np.array([targets[i]])).to(torch.float)
+            if self.dataset_name == "PTC_FM":
+                if targets[i] < 0:
+                    data.y = (
+                        torch.from_numpy(np.array([targets[i]])).to(torch.float)
+                        - min_targets
+                    )
+                else:
+                    data.y = torch.from_numpy(np.array([targets[i]])).to(torch.float)
+            else:
+                data.y = (
+                    torch.from_numpy(np.array([targets[i]])).to(torch.float)
+                    - min_targets
+                )
             data_list.append(data)
 
         data, slices = self.collate(data_list)
@@ -179,7 +186,7 @@ def main(
     epochs: int,
     hidden_units: list,
     dataset_info: str,
-    learning_rate: FloatingPointError = 0.001,
+    learning_rate: float = 0.001,
     batch_size: int = 32,
     factor: float = 0.5,
     patience: float = 5,

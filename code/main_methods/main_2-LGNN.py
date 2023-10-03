@@ -66,7 +66,7 @@ class Dataset_data(InMemoryDataset):
             multigregression=self.multiregression,
             classification=self.classification,
         )
-        # min_targets = min(targets)
+        min_targets = min(targets)
         all_indices = [i for i in range(1000)]
 
         node_labels = pre.get_all_set_node_labels_2_2(
@@ -84,8 +84,7 @@ class Dataset_data(InMemoryDataset):
             matrix for matrix, label in zip(matrices, node_labels) if len(label) > 0
         ]
         node_labels = [label for label in node_labels if len(label) > 0]
-        print(len(node_labels))
-        print(len(matrices))
+
         end_time = time.time()
         print(f"Time needed for preprocessing: {(end_time - start_time)}")
         for i, m in enumerate(matrices):
@@ -101,12 +100,19 @@ class Dataset_data(InMemoryDataset):
             x_new[range(x_new.shape[0]), data.x.view(1, data.x.size(0))] = 1
             data.x = x_new
 
-            # if targets[i] < 0:
-            data.y = torch.from_numpy(np.array([targets[i]])).to(
-                torch.float
-            )  # - min_targets
-            # else:
-            #     data.y = torch.from_numpy(np.array([targets[i]])).to(torch.float)
+            if self.dataset_name == "PTC_FM":
+                if targets[i] < 0:
+                    data.y = (
+                        torch.from_numpy(np.array([targets[i]])).to(torch.float)
+                        - min_targets
+                    )
+                else:
+                    data.y = torch.from_numpy(np.array([targets[i]])).to(torch.float)
+            else:
+                data.y = (
+                    torch.from_numpy(np.array([targets[i]])).to(torch.float)
+                    - min_targets
+                )
 
             data_list.append(data)
 
