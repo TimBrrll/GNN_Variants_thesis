@@ -21,7 +21,7 @@ brew install pybind11
 ```
 
 ## Running Kernel Baselines
-In order to run the kernelp baselines, please navigate to the folder that contains all auxiliary methods in order to run the kernel baselines by executing 
+In order to run the kernelp baselines, please navigate to the folder that contains all auxiliary methods and execute 
 ```console
 cd code/main_methods/kernel_models
 ```
@@ -45,9 +45,9 @@ python3 main_kernel.py
 ## Running Neural Baselines
 
 For all neural models, navigate to the neural models from the root directory by 
-'''console
+```console
 cd code/main_methods/preprocessing
-'''
+```
 
 To integrate `pybind11`, for MacOS execute:
 ```console
@@ -59,9 +59,8 @@ For linux users, this becomes
 g++ -O3 -shared -std=c++11 -fPIC `python3 -m pybind11 eigen --includes`  kernel_models.cpp src/*cpp -o ../kernel_models`python3-config --extension-suffix`
 ```
 
-Execute ```cd ..```, which leads you into the directory containing all main methods executing the GNN models.
-For this simply run 
+Navigate back to the main methods folder by ```cd ..```, that contains all main methods executing the GNN models.
+For this simply run, e.g.,
 ```
 python3 main_M-2-GNN.py
 ```
-You can execute any gnn based code with this, except `main_kernel.py`, which needs steps taken before, as explained previously.
