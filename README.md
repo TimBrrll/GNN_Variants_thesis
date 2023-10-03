@@ -2,7 +2,7 @@
 This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks" supervised by Prof. Christopher Morris.
 
 ## Installing all dependencies
-To install all dependencies needed for the code, please install poetry as explained in poetrys [documentation](https://python-poetry.org/docs/).
+To install all dependencies needed for the code, please install poetry as explained in poetry's [documentation](https://python-poetry.org/docs/).
 In the home directory of the repository, execute:
 ```console
 poetry install
