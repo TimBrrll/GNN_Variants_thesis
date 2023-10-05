@@ -1,8 +1,3 @@
-/**********************************************************************
- * Copyright (C) 2020 Christopher Morris <christopher.morris@udo.edu>
- *********************************************************************/
-
-
 #ifndef WLFAST_GRAPHLETKERNEL_H
 #define WLFAST_GRAPHLETKERNEL_H
 
@@ -17,8 +12,10 @@ using GraphletCounter = map<Graphlet, uint>;
 
 using namespace GraphLibrary;
 
-namespace GraphletKernel {
-    class GraphletKernel {
+namespace GraphletKernel
+{
+    class GraphletKernel
+    {
     public:
         GraphletKernel(const GraphDatabase &graph_database);
 
@@ -41,4 +38,4 @@ namespace GraphletKernel {
         uint m_num_labels;
     };
 }
-#endif //WLFAST_GRAPHLETKERNEL_H
+#endif // WLFAST_GRAPHLETKERNEL_H

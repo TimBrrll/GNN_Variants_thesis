@@ -1,8 +1,3 @@
-/**********************************************************************
- * Copyright (C) 2020 Christopher Morris <christopher.morris@udo.edu>
- *********************************************************************/
-
-
 #ifndef WLFAST_COLORREFINEMENTKERNEL_H
 #define WLFAST_COLORREFINEMENTKERNEL_H
 
@@ -16,11 +11,12 @@
 #include "AuxiliaryMethods.h"
 #include "Graph.h"
 
-
 using namespace GraphLibrary;
 
-namespace ColorRefinement {
-    class ColorRefinementKernel {
+namespace ColorRefinement
+{
+    class ColorRefinementKernel
+    {
     public:
         ColorRefinementKernel(const GraphDatabase &graph_database);
 
@@ -44,4 +40,4 @@ namespace ColorRefinement {
     };
 }
 
-#endif //WLFAST_COLORREFINEMENTKERNEL_H
+#endif // WLFAST_COLORREFINEMENTKERNEL_H

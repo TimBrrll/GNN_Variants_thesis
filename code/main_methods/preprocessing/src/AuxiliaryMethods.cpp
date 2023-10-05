@@ -38,9 +38,8 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        // string path = "code/main_methods";
-        // string path = "GNN_code/all_code/code/main_methods";
-        string path = ".";
+        string path = "code/main_methods";
+        // string path = ".";
 
         vector<uint> graph_indicator;
         ifstream myfile(
@@ -252,9 +251,9 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = ".";
-        // string path = "code/main_methods";
-        // string path = "/Users/chrsmrrs/localwl_dev";
+        string path = "code/main_methods";
+        // string path = ".";
+
         vector<int> classes;
 
         ifstream myfile(
@@ -281,9 +280,9 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = ".";
-        // string path = "code/main_methods";
-        // string path = "/Users/chrsmrrs/localwl_dev";
+        string path = "code/main_methods";
+        // string path = ".";
+
         vector<float> classes;
 
         ifstream myfile(

@@ -1,7 +1,3 @@
-/**********************************************************************
- * Copyright (C) 2020 Christopher Morris <christopher.morris@udo.edu>
- *********************************************************************/
-
 #include "AuxiliaryMethods.h"
 
 using Eigen::IOFormat;
@@ -29,7 +25,8 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = ".";
+        string path = "code/main_methods";
+        // string path = ".";
 
         vector<uint> graph_indicator;
         ifstream myfile(
@@ -171,7 +168,9 @@ namespace AuxiliaryMethods
     {
         string line;
 
-        string path = ".";
+        string path = "code/main_methods";
+        // string path = ".";
+
         vector<int> classes;
 
         ifstream myfile(

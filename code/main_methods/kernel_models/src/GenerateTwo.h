@@ -1,7 +1,3 @@
-/**********************************************************************
- * Copyright (C) 2020 Christopher Morris <christopher.morris@udo.edu>
- *********************************************************************/
-
 #ifndef WLFAST_GENERATETWO_H
 #define WLFAST_GENERATETWO_H
 
@@ -15,8 +11,10 @@ using TwoTuple = tuple<Node, Node>;
 
 using namespace GraphLibrary;
 
-namespace GenerateTwo {
-    class GenerateTwo {
+namespace GenerateTwo
+{
+    class GenerateTwo
+    {
     public:
         GenerateTwo(const GraphDatabase &graph_database);
 
@@ -49,4 +47,4 @@ namespace GenerateTwo {
     };
 }
 
-#endif //WLFAST_GENERATETWO_H
+#endif // WLFAST_GENERATETWO_H

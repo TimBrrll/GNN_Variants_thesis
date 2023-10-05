@@ -1,11 +1,5 @@
-/**********************************************************************
- * Copyright (C) 2020 Christopher Morris <christopher.morris@udo.edu>
- *********************************************************************/
-
-
 #ifndef WLFAST_SHORTESTPATHKERNEL_H
 #define WLFAST_SHORTESTPATHKERNEL_H
-
 
 #include <unordered_map>
 
@@ -19,8 +13,10 @@ using U = Eigen::Triplet<uint>;
 
 using namespace GraphLibrary;
 
-namespace ShortestPathKernel {
-    class ShortestPathKernel {
+namespace ShortestPathKernel
+{
+    class ShortestPathKernel
+    {
     public:
         ShortestPathKernel(const GraphDatabase &graph_database);
 
@@ -44,4 +40,4 @@ namespace ShortestPathKernel {
     };
 }
 
-#endif //WLFAST_SHORTESTPATHKERNEL_H
+#endif // WLFAST_SHORTESTPATHKERNEL_H

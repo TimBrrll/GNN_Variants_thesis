@@ -1,0 +1,27 @@
+/code/tmp/
+/code/datasets/
+/code/main_methods/__pycache__/
+/code/main_methods/gnn_models/__pycache__/
+/code/__pycache__/
+/code/main_methods/tmp/
+/code/main_methods/data/
+/code/main_methods/datasets/
+/code/kernel_methods/datasets/
+/code/bin_directory/
+/code/.eggs/
+/code/k_gnn.egg_info/
+/build/
+
+#For other GNN models
+/code/auxiliarymethods/
+/code/dist/
+/code/cpu/
+/code/build/
+
+.venv
+/.venv
+/.idea
+/.eggs
+/.vscode
+
+/k_gnn.egg-info/

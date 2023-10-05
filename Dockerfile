@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04 
+FROM --platform=linux/amd64 nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu22.04
 ARG POETRY_EXTRA_ARGS=""
 ARG POETRY_VERSION=1.3.1
 
@@ -33,18 +33,21 @@ RUN poetry install --only-root
 
 RUN apt-get update && apt-get install -y libeigen3-dev pybind11-dev python3.10-dev
 
+#For neural models
 WORKDIR /project/code/main_methods/preprocessing
 RUN g++ -O3 -shared -std=c++11 -fPIC -I/usr/include/eigen3 -I/usr/include/pybind11 -I/usr/include/python3.10  preprocessing.cpp src/*cpp -o ../preprocessing`python3-config --extension-suffix`
 EXPOSE 3030
 
+WORKDIR /project
+
 #For kernel models
-# WORKDIR /project/code/main_methods/kernel_models
-# RUN g++ -O3 -shared -std=c++11 -fPIC -I/usr/include/eigen3 -I/usr/include/pybind11 -I/usr/include/python3.10  kernel_models.cpp src/*cpp -o ../kernel_models`python3-config --extension-suffix`
-# EXPOSE 3030
+WORKDIR /project/code/main_methods/kernel_models
+RUN g++ -O3 -shared -std=c++11 -fPIC -I/usr/include/eigen3 -I/usr/include/pybind11 -I/usr/include/python3.10  kernel_models.cpp src/*cpp -o ../kernel_models`python3-config --extension-suffix`
+EXPOSE 3030
 
 
 RUN --mount=type=cache,target=/root/.cache apt-get install -y --no-install-recommends python3-pip
 RUN --mount=type=cache,target=/root/.cache pip3 install torch-scatter
 
 WORKDIR /project
-ENTRYPOINT ["poetry", "run", "python3", "-u", "code/main_methods/main_sparse_m_3_gnn.py"]
+ENTRYPOINT ["poetry", "run", "python3", "-u", "code/main_methods/main_M-2-LGNN.py"]
