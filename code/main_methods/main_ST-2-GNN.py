@@ -4,8 +4,6 @@ import torch_geometric.transforms as T
 import numpy as np
 import os.path as osp
 import sys
-import tqdm
-import itertools
 import time
 
 sys.path.insert(0, "..")
@@ -233,9 +231,7 @@ def main(
             test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
 
             for hu in hidden_units:
-                times = []
                 for i in range(repetitions):
-                    model_start_time = time.time()
                     model = neural_models.NetGin.OneGnn(
                         dataset=dataset,
                         hidden_units=hu,
@@ -250,15 +246,12 @@ def main(
                         min_lr=min_lr,
                     )
 
-                    loss_arr = []
                     for _ in range(1, epochs + 1):
                         learning_rate = scheduler.optimizer.param_groups[0]["lr"]
                         train(train_loader, model, optimizer, device)
                         cor, len_data = test(val_loader, model, device)
                         val_acc = cor / len_data
                         scheduler.step(val_acc)
-
-                        loss_arr.append(val_acc)
 
                         if val_acc > best_val_acc:
                             best_val_acc = val_acc
@@ -277,11 +270,6 @@ def main(
                         if learning_rate < min_lr:
                             break
 
-                    model_end_time = time.time()
-                    times.append(model_end_time - model_start_time)
-                print(
-                    f"The ST-K-GNN needed {(np.array(times).mean())} seconds to run 100 Epochs"
-                )
             test_accuracies.append(best_test)
         accuracies.append(float(np.array(test_accuracies).mean()))
     return np.array(accuracies).mean(), np.array(accuracies).std()
@@ -291,22 +279,14 @@ if __name__ == "__main__":
     epochs = 100
     repetitions = 5
     hidden_units = [32, 64, 128]
-    hidden_units = [64]
     batch_size = 32
     dataset_name = [
-        # ["ENZYMES", False, True, True, False],
-        # ["IMDB-BINARY", False, True, False, False],
+        ["ENZYMES", False, True, True, False],
+        ["IMDB-BINARY", False, True, False, False],
         ["IMDB-MULTI", False, True, False, False],
-        # ["PROTEINS", False, True, False, False],
-        # ["REDDIT-BINARY", False, False, False, False],
-        # ["PTC_FM", False, True, True, False]
+        ["PROTEINS", False, True, False, False],
+        ["PTC_FM", False, True, True, False],
     ]
-
-    try:
-        shutil.rmtree("code/main_methods/datasets")
-        shutil.rmtree("code/main_methods/data")
-    except:
-        pass
 
     for dataset in dataset_name:
         print(f"------------------------- Dataset: {dataset[0]} ----------------------")
@@ -319,41 +299,8 @@ if __name__ == "__main__":
         )
         print("#####################################################")
         print(
-            f"FINAL RESULT ST-K-GNN for {dataset}, mean_losses: {loss}, std_losses: {std}"
+            f"FINAL RESULT ST-2-GNN for {dataset}, mean_losses: {loss}, std_losses: {std}"
         )
         print("#####################################################")
         shutil.rmtree("code/main_methods/datasets")
         shutil.rmtree("code/main_methods/data")
-
-    big_dataset_names = [
-        # "Yeast",
-        # "YeastH",
-        # "UACC257",
-        # "UACC257H",
-        # "OVCAR-8",
-        # "OVCAR-8H",
-    ]
-    big_data_reps = 1
-    big_data_layers = [1]
-    big_data_hu = [2]
-    big_data_epochs = 5
-    batch_size = 64
-    learning_rate = 0.01
-    total_loss = []
-
-    for dataset in big_dataset_names:
-        print(f"------------------------- Dataset: {dataset} ----------------------")
-        loss, std = main(
-            epochs=big_data_epochs,
-            hidden_units=big_data_hu,
-            learning_rate=learning_rate,
-            dataset_name=dataset,
-            repetitions=big_data_reps,
-            batch_size=batch_size,
-        )
-
-        print("#####################################################")
-        print(f"FINAL RESULT for {dataset}: mean_losses: {loss}, std_losses: {std}")
-        print("#####################################################")
-        shutil.rmtree("datasets")
-        shutil.rmtree("data")

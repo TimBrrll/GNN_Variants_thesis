@@ -1,9 +1,7 @@
-# setting path
 import auxiliarymethods.auxiliary_methods as aux
 from auxiliarymethods.datasets import get_dataset
 import kernel_models as kb
 from auxiliarymethods.kernel_evaluation import kernel_svm_evaluation
-from auxiliarymethods.kernel_evaluation import linear_svm_evaluation
 
 
 def main():
@@ -12,7 +10,6 @@ def main():
         ["IMDB-BINARY", False],
         ["IMDB-MULTI", False],
         ["PROTEINS", True],
-        ["REDDIT-BINARY", False],
         ["PTC_FM", False],
     ]
 
@@ -68,9 +65,6 @@ def main():
         )
         print(dataset + " " + "SP " + str(acc) + " " + str(s_1))
         results.append(dataset + " " + "SP " + str(acc) + " " + str(s_1))
-
-    for r in results:
-        print(r)
 
 
 if __name__ == "__main__":

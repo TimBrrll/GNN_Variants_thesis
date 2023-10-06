@@ -85,21 +85,6 @@ def main(
 ):
     dataset = TUDataset(root=f"../tmp/{dataset_name}", name=dataset_name).shuffle()
     dataset = dataset_is_none(dataset)
-
-    if dataset.data.x is None:
-        max_degree = 0
-        degs = []
-        for data in dataset:
-            degs += [degree(data.edge_index[0], dtype=torch.long)]
-            max_degree = max(max_degree, degs[-1].max().item())
-
-        if max_degree < 1000:
-            dataset.transform = T.OneHotDegree(max_degree)
-        else:
-            deg = torch.cat(degs, dim=0).to(torch.float)
-            mean, std = deg.mean().item(), deg.std().item()
-            dataset.transform = NormalizedDegree(mean, std)
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     accuracies = []
@@ -155,12 +140,13 @@ def main(
                             best_test = cor / len_data * 100
                             if best_test > all_best_test:
                                 all_best_test = best_test
-                        print(
-                            "Epoch: {:03d}, LR: {:7f}, "
-                            "Val Loss: {:.7f}, Test Acc: {:.7f}, Best Test Acc: {:.7f}".format(
-                                _, learning_rate, val_acc, best_test, all_best_test
+                        if _ % 50 == 0:
+                            print(
+                                "Epoch: {:03d}, LR: {:7f}, "
+                                "Val Loss: {:.7f}, Test Acc: {:.7f}, Best Test Acc: {:.7f}".format(
+                                    _, learning_rate, val_acc, best_test, all_best_test
+                                )
                             )
-                        )
 
                         if learning_rate < min_lr:
                             break
@@ -174,14 +160,7 @@ if __name__ == "__main__":
     layers = [3, 4, 5]
     repetitions = 5
     hidden_units = [32, 64, 128]
-    dataset_name = [
-        # "ENZYMES",
-        # "PROTEINS",
-        # "REDDIT-BINARY",
-        # "IMDB-BINARY",
-        # "IMDB-MULTI",
-        "PTC_FM"
-    ]
+    dataset_name = ["ENZYMES", "REDDIT-BINARY", "IMDB-BINARY", "IMDB-MULTI", "PTC_FM"]
     batch_size = 32
     n_folds = 5
 
@@ -198,10 +177,10 @@ if __name__ == "__main__":
             n_folds=n_folds,
         )
         print("#####################################################")
-
         print(
             f"FINAL RESULT GRAPHSAGE for {dataset}: mean_losses: {loss}, std_losses: {std}"
         )
+        print("#####################################################")
         shutil.rmtree("../tmp")
 
     big_dataset_names = [

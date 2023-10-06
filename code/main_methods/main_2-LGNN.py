@@ -67,26 +67,23 @@ class Dataset_data(InMemoryDataset):
             classification=self.classification,
         )
         min_targets = min(targets)
-        all_indices = [i for i in range(1000)]
+        all_indices = [i for i in range(len(targets))]
 
         node_labels = pre.get_all_set_node_labels_2_2(
             self.dataset_name, self.use_vertex_labels, self.use_edge_labels
         )
 
-        # max_label = max([max(label) for label in node_labels])
-
         matrices = []
         start_time = time.time()
 
         matrices = pre.get_local_sparse_set_2(self.dataset_name, all_indices)
-
         matrices = [
             matrix for matrix, label in zip(matrices, node_labels) if len(label) > 0
         ]
         node_labels = [label for label in node_labels if len(label) > 0]
-
         end_time = time.time()
         print(f"Time needed for preprocessing: {(end_time - start_time)}")
+
         for i, m in enumerate(matrices):
             edge_index_1 = torch.tensor(m).t().contiguous()
 
@@ -242,9 +239,7 @@ def main(
             test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
 
             for hu in hidden_units:
-                times = []
                 for i in range(repetitions):
-                    model_start_time = time.time()
                     model = neural_models.NetGin.OneGnn(
                         dataset=dataset,
                         hidden_units=hu,
@@ -285,44 +280,28 @@ def main(
 
                         if learning_rate < min_lr:
                             break
-                model_end_time = time.time()
-                times.append(model_end_time - model_start_time)
-            print(
-                f"The K-LGNN needed on average {np.array(times).mean()} seconds to run 100 Epochs"
-            )
-            raise ValueError("Test")
+
             test_accuracies.append(best_test)
         accuracies.append(float(np.array(test_accuracies).mean()))
     return np.array(accuracies).mean(), np.array(accuracies).std()
 
 
 if __name__ == "__main__":
-    epochs = 1
-    repetitions = 1
-    # hidden_units = [32, 64, 128]
-    hidden_units = [64]
+    epochs = 100
+    repetitions = 5
+    hidden_units = [32, 64, 128]
     batch_size = 32
     dataset_name = [
-        ["alchemy_full", True, False, True, True]
-        # ["ENZYMES", False, True, True, False],
-        # ["IMDB-BINARY", False, False, False, False],
-        # ["IMDB-MULTI", False, False, False, False],
-        # ["PROTEINS", False, True, False, False],
-        # ["PTC_FM", False, True, True, False],
+        ["ENZYMES", False, True, True, False],
+        ["IMDB-BINARY", False, False, False, False],
+        ["IMDB-MULTI", False, False, False, False],
+        ["PROTEINS", False, True, False, False],
+        ["PTC_FM", False, True, True, False],
     ]
     preprocess_bool = False
-    total_loss = []
-
-    try:
-        shutil.rmtree("code/main_methods/datasets")
-        shutil.rmtree("code/main_methods/data")
-    except:
-        pass
 
     for dataset in dataset_name:
-        print(
-            f"------------------------- Dataset: {dataset_name} ----------------------"
-        )
+        print(f"------------------------- Dataset: {dataset[0]} ----------------------")
         loss, std = main(
             epochs=epochs,
             hidden_units=hidden_units,
@@ -331,31 +310,30 @@ if __name__ == "__main__":
             batch_size=batch_size,
         )
         print("#####################################################")
-
         print(
-            f"FINAL RESULT for k-GNN for {dataset}, mean_losses: {loss}, std_losses: {std}"
+            f"FINAL RESULT for 2-LGNN for {dataset[0]}, mean_losses: {loss}, std_losses: {std}"
         )
         print("#####################################################")
+
         shutil.rmtree("code/main_methods/datasets")
         shutil.rmtree("code/main_methods/data")
 
     big_dataset_names = [
-        # ["Yeast", False, True, False, False],
-        # ["YeastH", False, True, False, False],
-        # ["UACC257", False, True, False, False],
-        # ["UACC257H", False, True, False, False],
-        # ["OVCAR-8", False, True, False, False],
-        # ["OVCAR-8H", False, True, False, False],
+        ["Yeast", False, True, False, False],
+        ["YeastH", False, True, False, False],
+        ["UACC257", False, True, False, False],
+        ["UACC257H", False, True, False, False],
+        ["OVCAR-8", False, True, False, False],
+        ["OVCAR-8H", False, True, False, False],
     ]
     big_data_reps = 3
     big_data_hu = [32]
     big_data_epochs = 100
     batch_size = 64
     learning_rate = 0.1
-    total_loss = []
 
     for dataset in big_dataset_names:
-        print(f"------------------------- Dataset: {dataset} ----------------------")
+        print(f"------------------------- Dataset: {dataset[0]} ----------------------")
         loss, std = main(
             epochs=big_data_epochs,
             hidden_units=big_data_hu,
@@ -367,8 +345,9 @@ if __name__ == "__main__":
 
         print("#####################################################")
         print(
-            f"FINAL RESULT for k-LGNN for {dataset}: mean_losses: {loss}, std_losses: {std}"
+            f"FINAL RESULT for 2-LGNN for {dataset[0]}: mean_losses: {loss}, std_losses: {std}"
         )
         print("#####################################################")
+
         shutil.rmtree("code/main_methods/datasets")
         shutil.rmtree("code/main_methods/data")

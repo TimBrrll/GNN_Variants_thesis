@@ -4,8 +4,6 @@ import torch_geometric.transforms as T
 import numpy as np
 import os.path as osp
 import sys
-import tqdm
-import itertools
 import time
 
 sys.path.insert(0, "..")
@@ -48,7 +46,7 @@ class Dataset_data(InMemoryDataset):
 
     @property
     def raw_file_names(self):
-        return "al_10_10k_2sss"
+        return f"al_10_10k_2sss"
 
     @property
     def processed_file_names(self):
@@ -191,7 +189,7 @@ def main(
     epochs: int,
     hidden_units: list,
     dataset_info: list,
-    learning_rate: int = 0.001,
+    learning_rate: float = 0.001,
     batch_size: int = 32,
     factor: float = 0.5,
     patience: float = 5,
@@ -216,13 +214,11 @@ def main(
         transform=MyTransform(),
     )
     accuracies_test = []
-    accuracies_train = []
 
     for i in range(repetitions):
         print(f"rep: {i}")
         dataset.shuffle()
         test_accuracies = []
-        train_accuracies = []
         kfold = KFold(n_splits=5, shuffle=True)
 
         for train_index, test_index in kfold.split(range(len(dataset))):
@@ -283,15 +279,11 @@ def main(
 
                         if learning_rate < min_lr:
                             break
-            train_accuracies.append(best_val_acc)
             test_accuracies.append(best_test)
         accuracies_test.append(float(np.array(test_accuracies).mean()))
-        accuracies_train.append(float(np.array(train_accuracies).mean()))
     return (
         np.array(accuracies_test).mean(),
         np.array(accuracies_test).std(),
-        np.array(accuracies_train).mean(),
-        np.array(accuracies_train).std(),
     )
 
 
@@ -299,24 +291,14 @@ if __name__ == "__main__":
     epochs = 100
     repetitions = 5
     hidden_units = [8, 16, 32]
+    batch_size = 32
 
     dataset_name = [
         ["ENZYMES", False, True, True, False],
         ["IMDB-BINARY", False, False, False, False],
         ["IMDB-MULTI", False, False, False, False],
-        # ["PROTEINS", False, True, True, False],
-        # ["PTC_FM", False, True, True, False],
+        ["PTC_FM", False, True, True, False],
     ]
-
-    batch_size = 32
-    preprocess_bool = False
-    total_loss = []
-
-    try:
-        shutil.rmtree("code/main_methods/datasets")
-        shutil.rmtree("code/main_methods/data")
-    except:
-        pass
 
     for dataset in dataset_name:
         print(f"------------------------- Dataset: {dataset[0]} ----------------------")
@@ -329,7 +311,7 @@ if __name__ == "__main__":
         )
         print("#####################################################")
         print(
-            f"FINAL RESULT M-3-LGNN for {dataset[0]}, mean_test_losses: {test_loss}, std_test_losses: {test_std}, mean_train_losses: {train_loss}, std_train_losses: {train_std}"
+            f"FINAL RESULT M-3-LGNN for {dataset[0]}, mean_test_losses: {test_loss}, std_test_losses: {test_std}"
         )
         print("#####################################################")
         shutil.rmtree("code/main_methods/datasets")

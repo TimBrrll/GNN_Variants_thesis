@@ -50,4 +50,4 @@ RUN --mount=type=cache,target=/root/.cache apt-get install -y --no-install-recom
 RUN --mount=type=cache,target=/root/.cache pip3 install torch-scatter
 
 WORKDIR /project
-ENTRYPOINT ["poetry", "run", "python3", "-u", "code/main_methods/main_M-2-LGNN.py"]
+ENTRYPOINT ["poetry", "run", "python3", "-u", "code/main_methods/main_2-LGNN.py"]

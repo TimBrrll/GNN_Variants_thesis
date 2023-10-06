@@ -4,8 +4,6 @@ import torch_geometric.transforms as T
 import numpy as np
 import os.path as osp
 import sys
-import tqdm
-import itertools
 import time
 
 sys.path.insert(0, "..")
@@ -94,6 +92,7 @@ class Dataset_data(InMemoryDataset):
             x_new = torch.zeros(data.x.size(0), max_label + 1)
             x_new[range(x_new.shape[0]), data.x.view(1, data.x.size(0))] = 1
             data.x = x_new
+
             if self.dataset_name == "PTC_FM":
                 if targets[i] < 0:
                     data.y = (
@@ -110,7 +109,6 @@ class Dataset_data(InMemoryDataset):
             data_list.append(data)
 
         data, slices = self.collate(data_list)
-        # raise ValueError("Test")
 
         torch.save((data, slices), self.processed_paths[0])
 
@@ -253,8 +251,6 @@ def main(
                     patience=patience,
                     min_lr=min_lr,
                 )
-
-                loss_arr = []
                 for _ in range(1, epochs + 1):
                     learning_rate = scheduler.optimizer.param_groups[0]["lr"]
                     torch.cuda.empty_cache()
@@ -263,7 +259,6 @@ def main(
                     val_acc = cor / len_data
                     scheduler.step(val_acc)
 
-                    loss_arr.append(val_acc)
                     torch.cuda.empty_cache()
 
                     if val_acc > best_val_acc:
@@ -297,19 +292,10 @@ if __name__ == "__main__":
         ["ENZYMES", False, True, True, False],
         ["IMDB-BINARY", False, False, False, False],
         ["IMDB-MULTI", False, False, False, False],
-        # ["PROTEINS", False, True, True, False],
-        # ["PTC_FM", False, True, True, False],
+        ["PTC_FM", False, True, True, False],
     ]
 
-    batch_size = 64
-    preprocess_bool = False
-    total_loss = []
-
-    try:
-        shutil.rmtree("code/main_methods/datasets")
-        shutil.rmtree("code/main_methods/data")
-    except:
-        pass
+    batch_size = 32
 
     for dataset in dataset_name:
         print(f"------------------------- Dataset: {dataset[0]} ----------------------")

@@ -84,21 +84,6 @@ def main(
 ):
     dataset = TUDataset(root=f"../tmp/{dataset_name}", name=dataset_name).shuffle()
     dataset = dataset_is_none(dataset)
-
-    if dataset.data.x is None:
-        max_degree = 0
-        degs = []
-        for data in dataset:
-            degs += [degree(data.edge_index[0], dtype=torch.long)]
-            max_degree = max(max_degree, degs[-1].max().item())
-
-        if max_degree < 1000:
-            dataset.transform = T.OneHotDegree(max_degree)
-        else:
-            deg = torch.cat(degs, dim=0).to(torch.float)
-            mean, std = deg.mean().item(), deg.std().item()
-            dataset.transform = NormalizedDegree(mean, std)
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     accuracies = []
@@ -135,7 +120,6 @@ def main(
                     min_lr=min_lr,
                 )
 
-                loss_arr = []
                 for _ in range(1, epochs + 1):
                     learning_rate = scheduler.optimizer.param_groups[0]["lr"]
                     train(train_loader, model, optimizer, device)
@@ -143,20 +127,19 @@ def main(
                     val_acc = cor / len_data
                     scheduler.step(val_acc)
 
-                    loss_arr.append(val_acc)
-
                     if val_acc > best_val_acc:
                         best_val_acc = val_acc
                         cor, len_data = test(test_loader, model, device)
                         best_test = cor / len_data * 100
                         if best_test > all_best_test:
                             all_best_test = best_test
-                    print(
-                        "Epoch: {:03d}, LR: {:7f}, "
-                        "Val Loss: {:.7f}, Test Acc: {:.7f}, Best Test Acc: {:.7f}".format(
-                            _, learning_rate, val_acc, best_test, all_best_test
+                    if _ % 50 == 0:
+                        print(
+                            "Epoch: {:03d}, LR: {:7f}, "
+                            "Val Loss: {:.7f}, Test Acc: {:.7f}, Best Test Acc: {:.7f}".format(
+                                _, learning_rate, val_acc, best_test, all_best_test
+                            )
                         )
-                    )
                     if learning_rate < min_lr:
                         break
             test_accuracies.append(best_test)
@@ -168,17 +151,8 @@ if __name__ == "__main__":
     epochs = 100
     repetitions = 5
     hidden_units = [32, 64, 128]
-    dataset_name = [
-        # "ENZYMES",
-        # "IMDB-BINARY",
-        # "IMDB-MULTI",
-        # "PROTEINS",
-        # "REDDIT-BINARY"
-        "PTC_FM"
-    ]
+    dataset_name = ["ENZYMES", "IMDB-BINARY", "IMDB-MULTI", "PROTEINS", "PTC_FM"]
     batch_size = 32
-    preprocess_bool = False
-    total_loss = []
     n_folds = 5
 
     for dataset in dataset_name:
@@ -193,26 +167,25 @@ if __name__ == "__main__":
             n_folds=n_folds,
         )
         print("#####################################################")
-
         print(
             f"FINAL RESULT 1-GNN for {dataset}: mean_losses: {loss}, std_losses: {std}"
         )
+        print("#####################################################")
         shutil.rmtree("../tmp")
 
     big_dataset_names = [
-        # "Yeast",
-        # "YeastH",
-        # "UACC257",
-        # "UACC257H",
-        # "OVCAR-8",
-        # "OVCAR-8H",
+        "Yeast",
+        "YeastH",
+        "UACC257",
+        "UACC257H",
+        "OVCAR-8",
+        "OVCAR-8H",
     ]
 
     big_data_reps = 3
     big_data_hu = [64]
     big_data_epochs = 100
     batch_size = 64
-    total_loss = []
 
     for dataset in big_dataset_names:
         print(f"------------------------- Dataset: {dataset} ----------------------")

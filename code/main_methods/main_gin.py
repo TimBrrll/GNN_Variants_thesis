@@ -86,26 +86,12 @@ def main(
     min_lr: float = 1e-06,
 ):
     dataset = TUDataset(root=f"../tmp/{dataset_name}", name=dataset_name).shuffle()
-
-    if dataset.data.x is None:
-        max_degree = 0
-        degs = []
-        for data in dataset:
-            degs += [degree(data.edge_index[0], dtype=torch.long)]
-            max_degree = max(max_degree, degs[-1].max().item())
-
-        if max_degree < 1000:
-            dataset.transform = T.OneHotDegree(max_degree)
-        else:
-            deg = torch.cat(degs, dim=0).to(torch.float)
-            mean, std = deg.mean().item(), deg.std().item()
-            dataset.transform = NormalizedDegree(mean, std)
-
+    dataset = dataset_is_none(dataset)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     accuracies = []
 
-    for i in range(repetitions):
+    for _ in range(repetitions):
         dataset.shuffle()
 
         test_accuracies = []
@@ -143,7 +129,6 @@ def main(
                         min_lr=min_lr,
                     )
 
-                    loss_arr = []
                     for _ in range(1, epochs + 1):
                         learning_rate = scheduler.optimizer.param_groups[0]["lr"]
                         train(train_loader, model, optimizer, device)
@@ -151,15 +136,13 @@ def main(
                         val_acc = cor / len_data
                         scheduler.step(val_acc)
 
-                        loss_arr.append(val_acc)
-
                         if val_acc > best_val_acc:
                             best_val_acc = val_acc
                             cor, len_data = test(test_loader, model, device)
                             best_test = cor / len_data * 100
                             if best_test > all_best_test:
                                 all_best_test = best_test
-                        if _ % 100 == 0:
+                        if _ % 50 == 0:
                             print(
                                 "Epoch: {:03d}, LR: {:7f}, "
                                 "Val Loss: {:.7f}, Test Acc: {:.7f}, Best Test Acc: {:.7f}".format(
@@ -176,28 +159,16 @@ if __name__ == "__main__":
     layers = [3, 4, 5]
     repetitions = 5
     hidden_units = [32, 64, 128]
-    dataset_name = [
-        # "ENZYMES",
-        # "PROTEINS",
-        # "REDDIT-BINARY",
-        # "IMDB-BINARY",
-        # "IMDB-MULTI",
-        # "PTC_FM"
-    ]
+    dataset_name = ["ENZYMES", "PROTEINS", "IMDB-BINARY", "IMDB-MULTI", "PTC_FM"]
     batch_size = 64
     preprocess_bool = False
-    total_loss = []
-    learn_eps = [True, False]
     n_splits = 5
+
+    learn_eps = [True, False]
 
     for dataset in dataset_name:
         print(f"------------------------- Dataset: {dataset} ----------------------")
         for learn_epsilon in learn_eps:
-            # print(
-            #     f"------------Learn_eps:{learn_epsilon}, Layers: {layers[i]}, hidden_units: {hidden_units[j]},------------"
-            # )
-            if preprocess_bool:
-                data = preprocess(data)
             loss, std = main(
                 epochs=epochs,
                 layers=layers,
@@ -209,19 +180,17 @@ if __name__ == "__main__":
                 batch_size=batch_size,
             )
             print("#####################################################")
-
             print(
                 f"FINAL RESULT GIN for {dataset} with learn_eps: {learn_epsilon}: mean_losses: {loss}, std_losses: {std}"
             )
             print("#####################################################")
-    shutil.rmtree("../tmp")
+        shutil.rmtree("../tmp")
 
-    learn_eps = [True, False]
     big_dataset_names = [
-        #     "Yeast",
-        #     "YeastH",
-        #     "UACC257",
-        #     "UACC257H",
+        "Yeast",
+        "YeastH",
+        "UACC257",
+        "UACC257H",
         "OVCAR-8",
         "OVCAR-8H",
     ]
@@ -231,7 +200,6 @@ if __name__ == "__main__":
     big_data_epochs = 100
     batch_size = 64
     learning_rate = 0.01
-    total_loss = []
 
     for dataset in big_dataset_names:
         print(f"------------------------- Dataset: {dataset} ----------------------")

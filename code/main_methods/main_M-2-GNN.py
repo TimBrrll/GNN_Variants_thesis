@@ -252,15 +252,12 @@ def main(
                     min_lr=min_lr,
                 )
 
-                loss_arr = []
                 for _ in range(1, epochs + 1):
                     learning_rate = scheduler.optimizer.param_groups[0]["lr"]
                     train(train_loader, model, optimizer, device)
                     cor, len_data = test(val_loader, model, device)
                     val_acc = cor / len_data
                     scheduler.step(val_acc)
-
-                    loss_arr.append(val_acc)
 
                     if val_acc > best_val_acc:
                         best_val_acc = val_acc
@@ -278,13 +275,6 @@ def main(
 
                     if learning_rate < min_lr:
                         break
-                #     model_end_time = time.time()
-                #     times.append(model_end_time - model_start_time)
-
-                # print(
-                #     f"The M-K-GNN needed for {dataset_info[0]} around {np.array(times).mean()} seconds to run 100 Epochs"
-                # )
-                # raise ValueError("Test")
             test_accuracies.append(best_test)
         accuracies.append(float(np.array(test_accuracies).mean()))
     return np.array(accuracies).mean(), np.array(accuracies).std()
@@ -292,29 +282,19 @@ def main(
 
 if __name__ == "__main__":
     epochs = 100
-    repetitions = 10
+    repetitions = 5
     hidden_units = [32, 64, 128]
-    # hidden_units = [64]
     batch_size = 32
     dataset_name = [
         ["ENZYMES", False, True, True, False],
-        # ["IMDB-BINARY", False, False, False, False],
-        # ["IMDB-MULTI", False, False, False, False],
-        # ["PROTEINS", False, True, False, False],
-        # ["REDDIT-BINARY", False, False, False, False],
-        # ["PTC_FM", False, True, True, False]
+        ["IMDB-BINARY", False, False, False, False],
+        ["IMDB-MULTI", False, False, False, False],
+        ["PROTEINS", False, True, False, False],
+        ["PTC_FM", False, True, True, False],
     ]
 
-    try:
-        shutil.rmtree("code/main_methods/datasets")
-        shutil.rmtree("code/main_methods/data")
-    except:
-        pass
-
     for dataset in dataset_name:
-        print(
-            f"------------------------- Dataset: {dataset_name} ----------------------"
-        )
+        print(f"------------------------- Dataset: {dataset[0]} ----------------------")
         loss, std = main(
             epochs=epochs,
             hidden_units=hidden_units,
@@ -325,41 +305,8 @@ if __name__ == "__main__":
         print("#####################################################")
 
         print(
-            f"FINAL RESULT M-k-GNN for {dataset[0]}, mean_losses: {loss}, std_losses: {std}"
+            f"FINAL RESULT M-2-GNN for {dataset[0]}, mean_losses: {loss}, std_losses: {std}"
         )
         print("#####################################################")
         shutil.rmtree("code/main_methods/datasets")
         shutil.rmtree("code/main_methods/data")
-
-    big_dataset_names = [
-        # "Yeast",
-        # "YeastH",
-        # "UACC257",
-        # "UACC257H",
-        # "OVCAR-8",
-        # "OVCAR-8H",
-    ]
-    big_data_reps = 1
-    big_data_layers = [1]
-    big_data_hu = [2]
-    big_data_epochs = 5
-    batch_size = 64
-    learning_rate = 0.01
-    total_loss = []
-
-    for dataset in big_dataset_names:
-        print(f"------------------------- Dataset: {dataset} ----------------------")
-        loss, std = main(
-            epochs=big_data_epochs,
-            hidden_units=big_data_hu,
-            learning_rate=learning_rate,
-            dataset_name=dataset,
-            repetitions=big_data_reps,
-            batch_size=batch_size,
-        )
-
-        print("#####################################################")
-        print(f"FINAL RESULT for {dataset}: mean_losses: {loss}, std_losses: {std}")
-        print("#####################################################")
-        shutil.rmtree("datasets")
-        shutil.rmtree("data")
