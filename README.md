@@ -65,7 +65,7 @@ python3 main_kernel.py
 
 ## Running Neural Baselines
 
-As mentioned previously, the code is programmed to work as a Docker container..
+As mentioned previously, the code is programmed to work as a Docker container.
 Therefore, for it to work locally, change the `path` variable in `code/main_methods/preprocessing/src/AuxiliaryMethods.cpp` to `path = ".";` in lines 42, 254 and 284.
 
 For all neural models, navigate to the neural models from the root directory by 
