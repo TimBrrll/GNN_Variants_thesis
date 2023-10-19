@@ -1,8 +1,9 @@
 # Master's Thesis: The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks
 This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks" supervised by Prof. Christopher Morris.
 
-In the `code` folder of this repository, we have stored all code that was used for the evaluation part of the thesis. Under `counterexample` we have coded the k-FWL, the S-k-WL, the M-k-WL and the TM-k-WL applied to the graph pair showed in chapter 4.5.
-In the 'code/main_methods' folder you can find all coded GNN and kernel models, both the state-of-the-art compared baselines as well as the models that are proposed in the thesis.
+In the `code` folder of this repository, we have stored all code files that were used for the evaluation part of the thesis. 
+In `code/counterexample` we have coded the k-FWL, the S-k-WL, the M-k-WL and the TM-k-WL applied to the graph pair showed in chapter 4.5.
+In the `code/main_methods` folder you can find all coded GNN and kernel models, both the state-of-the-art neural and kernel baselines as well as the models that are proposed in the thesis.
 
 # Running by using Docker
 As it is the simplest way to install all dependencies, we recommend deploying and running the code via Docker. We refer to the [Docker installation site](https://docs.docker.com/engine/install/) for further information.  
