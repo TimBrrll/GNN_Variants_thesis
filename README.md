@@ -1,6 +1,9 @@
 # Master's Thesis: The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks
 This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks" supervised by Prof. Christopher Morris.
 
+In the `code` folder of this repository, we have stored all code that was used for the evaluation part of the thesis. Under `counterexample` we have coded the k-FWL, the S-k-WL, the M-k-WL and the TM-k-WL applied to the graph pair showed in chapter 4.5.
+In the 'code/main_methods' folder you can find all coded GNN and kernel models, both the state-of-the-art compared baselines as well as the models that are proposed in the thesis.
+
 # Running by using Docker
 As it is the simplest way to install all dependencies, we recommend deploying and running the code via Docker. We refer to the [Docker installation site](https://docs.docker.com/engine/install/) for further information.  
 In the `Dockerfile` found at the root of this repository, you can adjust which main method you would like to run. This can be found in line 53 and can be adjusted freely before building the image.
@@ -18,13 +21,6 @@ docker run <your_tag>
 # Running locally
 This option involves more finetuning and adjusting of dependency-paths and is thus not recommended. 
 
-## Installing all dependencies
-To install all dependencies needed for the code, please install poetry as explained in poetry's [documentation](https://python-poetry.org/docs/).
-In the home directory of the repository, execute:
-```console
-poetry install
-```
-
 If you want to use the kernel and neural baselines, it is crucial to install
 - `eigen3`,
 - `g++/gcc` 
@@ -35,6 +31,19 @@ When installing on MacOS, we suggest using [homebrew](https://brew.sh) for this.
 brew install eigen
 brew install gcc
 brew install pybind11
+```
+
+## Installing all dependencies
+To install all dependencies needed for the code, please install poetry as explained in poetry's [documentation](https://python-poetry.org/docs/).
+Again, homebrew offers to install poetry by: 
+
+```console
+brew install poetry
+```
+
+In the home directory of the repository, execute:
+```console
+poetry install
 ```
 
 ## Running Kernel Baselines
