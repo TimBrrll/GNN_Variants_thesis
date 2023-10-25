@@ -1,5 +1,5 @@
 # Master's Thesis: The Expressive Power of Variants of the Weisfeiler-Leman Algorithm
-This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks" supervised by Prof. Christopher Morris.
+This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm" supervised by Prof. Christopher Morris.
 
 In the `code` folder of this repository, we have stored all code files that were used for the evaluation part of the thesis. 
 In `code/counterexample` we have coded the k-FWL, the S-k-WL, the M-k-WL and the TM-k-WL applied to the graph pair showed in chapter 4.5.
