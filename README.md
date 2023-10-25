@@ -1,4 +1,4 @@
-# Master's Thesis: The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks
+# Master's Thesis: The Expressive Power of Variants of the Weisfeiler-Leman Algorithm
 This is the repository containing the code for my masters thesis: "The Expressive Power of Variants of the Weisfeiler-Leman Algorithm applied to Graph Neural Networks" supervised by Prof. Christopher Morris.
 
 In the `code` folder of this repository, we have stored all code files that were used for the evaluation part of the thesis. 
